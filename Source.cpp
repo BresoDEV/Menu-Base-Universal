@@ -18,6 +18,9 @@ void DRAW_RECT(int posx, int posy, int tamx, int tamy, int r, int g, int b);
 void DRAW_TEXT(int posx, int posy, int textor, int textog, int textob);
 int main();
 
+/// <summary>
+/// Enumerador de Menus
+/// </summary>
 enum Menus
 {
 	Fechado,
@@ -25,6 +28,9 @@ enum Menus
 	Cores,
 };
 
+/// <summary>
+/// Enumerador de Cores
+/// </summary>
 enum Cores
 {
 	Preto,
@@ -41,30 +47,30 @@ enum Cores
 };
 
 #pragma region GAME CONFIG
-LPCWSTR Jogo = TEXT("Minecraft 1.8.9");
-LPCWSTR Jogo_exe = TEXT("javaw.exe");
+LPCWSTR Jogo = TEXT("Minecraft 1.8.9");		//Nome da janela do jogo
+LPCWSTR Jogo_exe = TEXT("javaw.exe");		//Nome do executavel do jogo .exe
 #pragma endregion
 
 #pragma region LAYOUT
-int x = 50;
-int y = 50;
-int transparencia = 230;
-bool showhide = true;
-int posX = 70;
-int posY = 150;
-int width = 300;
-int height = 450;
-int velocidade = 100;
-int menuAtual = 1;
-int menuAnterior = 1;
-int opcaoAtual = 1;
-int ponteiroOpcao;
-int maxOpcoes = 10;
-int corBanner = 30;
-int corScroller = 30;
-int corScroller2 = CinzaEscuro;
-bool Detach = false;
-std::string espacamentoMenu = "   ";
+int x = 50;									//
+int y = 50;									//
+int transparencia = 230;					//
+bool showhide = true;						//
+int posX = 70;								//
+int posY = 150;								//
+int width = 300;							//
+int height = 450;							//
+int velocidade = 100;						//
+int menuAtual = 1;							//
+int menuAnterior = 1;						//
+int opcaoAtual = 1;							//
+int ponteiroOpcao;							//
+int maxOpcoes = 10;							//
+int corBanner = 30;							//
+int corScroller = 30;						//
+int corScroller2 = CinzaEscuro;				//
+bool Detach = false;						//
+std::string espacamentoMenu = "   ";		//
 
 #pragma endregion
 
@@ -86,27 +92,31 @@ std::string Arrays[11] = { "Paulo", "Ana", "Carlos", "Eduardo", "Pedro", "Maria"
 
 #pragma region CONSOLE DESIGN
 
+/// <summary>
+/// Define o tamanho da fonte do menu
+/// </summary>
 void tamanhoFonte(int tamanho)
 {
-
 	PCONSOLE_FONT_INFOEX lpConsoleCurrentFontEx = new CONSOLE_FONT_INFOEX;
-
-	lpConsoleCurrentFontEx->cbSize = sizeof(CONSOLE_FONT_INFOEX);
+    lpConsoleCurrentFontEx->cbSize = sizeof(CONSOLE_FONT_INFOEX);
 	lpConsoleCurrentFontEx->dwFontSize.X = tamanho;
 	lpConsoleCurrentFontEx->dwFontSize.Y = tamanho;
-
-	//GetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), NULL, lpConsoleCurrentFontEx); //retrive all console font informations
-
 	swprintf_s(lpConsoleCurrentFontEx->FaceName, L"Lucida Console");
-	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), NULL, lpConsoleCurrentFontEx);
-
-	//SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), NULL, lpConsoleCurrentFontEx); 
 }
+
+/// <summary>
+/// Define a cor do menu
+/// </summary>
 void SetMenuColor(int color)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, color);
 }
+
+/// <summary>
+/// Mantem o menu sob outras janelas
+/// </summary>
 void SetTopMost(HWND hWnd)
 {
 	RECT rect;
@@ -117,6 +127,10 @@ void SetTopMost(HWND hWnd)
 
 	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, posX, posY, width, height, SWP_SHOWWINDOW);
 }
+
+/// <summary>
+/// Desativa o menu
+/// </summary>
 void SetBOTTOM(HWND hWnd)
 {
 	RECT rect;
@@ -127,6 +141,10 @@ void SetBOTTOM(HWND hWnd)
 
 	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, posX, posY, width, height, SWP_HIDEWINDOW);
 }
+
+/// <summary>
+/// Start do menu, onde faz todas as configuracoes de layout
+/// </summary>
 void MenuSetWindow(int posX, int posY, int width, int height, bool Transparent)
 {
 	HWND console_window = GetConsoleWindow();
@@ -151,22 +169,19 @@ void MenuSetWindow(int posX, int posY, int width, int height, bool Transparent)
 	GetClientRect(hWnd, &rcClient);
 	SetWindowRgn(hWnd, CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom), TRUE);
 }
+
+/// <summary>
+/// Void usada para atualizar o layout, caso seja modificado valores pelo menu
+/// </summary>
 void UpdateMenuLayout()
 {
-
-
 	HWND console_window = GetConsoleWindow();
 	SetLayeredWindowAttributes(console_window, 0, transparencia, LWA_ALPHA);
-
-
-
 	HWND hWnd = GetConsoleWindow();
 	RECT rcScr, rcWnd, rcClient;
-
 	GetWindowRect(hWnd, &rcWnd);
 	GetWindowRect(GetDesktopWindow(), &rcScr);
 	GetClientRect(hWnd, &rcClient);
-
 	SetWindowLong(hWnd, GWL_STYLE, WS_POPUP);
 	SetWindowRgn(hWnd, CreateRectRgn(posX, posY, width, height), TRUE);
 	ShowWindow(hWnd, 1);
@@ -177,6 +192,10 @@ void UpdateMenuLayout()
 	tamanhoFonte(15);
 	//Menus(1);
 }
+
+/// <summary>
+/// Toggle que exibe/esconde o menu
+/// </summary>
 void MenuShowHide()
 {
 	if (GetAsyncKeyState(VK_DELETE))
@@ -202,6 +221,12 @@ void MenuShowHide()
 #pragma endregion
 
 #pragma region ADDOPTIONS 
+
+/// <summary>
+/// Adiciona uma opcao simples, onde clica e executa algo
+/// </summary>
+/// <param name="Texto da opcao que sera exibido na tela"></param>
+/// <param name="Numero da opcao na tela"></param>
 void AddOption(std::string Texto, int opcao = 10000)
 {
 	if (opcao == opcaoAtual)
@@ -218,6 +243,10 @@ void AddOption(std::string Texto, int opcao = 10000)
 	}
 }
 
+/// <summary>
+/// Adiciona os creditos no rodape do menu
+/// </summary>
+/// <param name="Nome do criador"></param>
 void AddCredits(std::string Texto)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -227,7 +256,12 @@ void AddCredits(std::string Texto)
 }
 
  
-
+/// <summary>
+/// Adiciona um titulo e subtitulo para o menu
+/// </summary>
+/// <param name="Titulo"></param>
+/// <param name="Subtitulo"></param>
+/// <param name="Numero maximo de opcoes do menu atual"></param>
 void AddTitle(std::string Texto , std::string SubTexto, int maxOpcoesMenuAtual)
 {
 	//Title
@@ -245,7 +279,12 @@ void AddTitle(std::string Texto , std::string SubTexto, int maxOpcoesMenuAtual)
 	tamanhoFonte(15);
 }
 
-
+/// <summary>
+/// Usado para adicionar uma opcao que precise ativar/desativar. Ex: God Mod
+/// </summary>
+/// <param name="Texto da opcao"></param>
+/// <param name="BOOL relacionada a funcao que quer ativar"></param>
+/// <param name="Numero da opcao no menu"></param>
 void AddBool(std::string Texto, bool boleta, int opcao)
 {
 	if (opcao == opcaoAtual)
@@ -269,7 +308,12 @@ void AddBool(std::string Texto, bool boleta, int opcao)
 }
 
 
-
+/// <summary>
+/// Usado para adicionar opcoes onde voce pode alterar o valor de um INT
+/// </summary>
+/// <param name="Texto da opcao"></param>
+/// <param name="Variavel INT que voce quer modificar"></param>
+/// <param name="Numero da opcao no menu"></param>
 void AddInt(std::string Texto, int inteiro, int opcao)
 {
 	if (opcao == opcaoAtual)
@@ -290,7 +334,12 @@ void AddInt(std::string Texto, int inteiro, int opcao)
 
 
 
-
+/// <summary>
+/// Usado para adicionar opcoes onde voce pode alterar o valor de um FLOAT
+/// </summary>
+/// <param name="Texto da opcao"></param>
+/// <param name="Variavel FLOAT que voce quer modificar"></param>
+/// <param name="Numero da opcao no menu"></param>
 void AddFloat(std::string Texto, float flutuante, int opcao)
 {
 	if (opcao == opcaoAtual)
@@ -307,7 +356,13 @@ void AddFloat(std::string Texto, float flutuante, int opcao)
 	}
 }
 
-
+/// <summary>
+/// Usado para adicionar opcoes onde voce pode alterar o valor de um Array
+/// </summary>
+/// <param name="Texto da opcao"></param>
+/// <param name="Variavel INT que vais er usada como ponteiro no array"></param>
+/// <param name="Array que sera percorrido pelo ponteiro"></param>
+/// <param name="Numero da opcao no menu"></param>
 void AddArray(std::string Texto, int ponteiro, std::string arrays[], int opcao)
 {
 	if (opcao == opcaoAtual)
@@ -325,7 +380,11 @@ void AddArray(std::string Texto, int ponteiro, std::string arrays[], int opcao)
 
 }
 
-
+/// <summary>
+/// Usado para dar um espacamento entre as opcoes
+/// </summary>
+/// <param name="Texto do espaco (opcional)"></param>
+/// <param name="Numero de linhas que ficarao em branco"></param>
 void AddBreak(std::string Texto = "", int linhas = 1)
 {
 	int linha = 1;
@@ -342,25 +401,39 @@ void AddBreak(std::string Texto = "", int linhas = 1)
 }
 
 
-
+/// <summary>
+/// Usado no inicio de cada menu, para definir o menu anterior, caso o usuario queira voltar para o menu anterior
+/// </summary>
+/// <param name="ENUM ou INT do menu"></param>
 void DefinirMenuAnterior(int menu)
 {
 	menuAnterior = menu;
 	//opcaoAtual = 1;
 }
 
+/// <summary>
+/// Muda para um menu/submenu especifico
+/// </summary>
+/// <param name="ENUM ou INT correspondente ao menu"></param>
 void ProxMenu(int menu)
 {
 	menuAtual = menu;
 	opcaoAtual = 1;
 }
 
+/// <summary>
+/// Volta ao menu anterior.     
+/// OBS: Use o DefinirMenuAnterior() antes de usar essa funcao
+/// </summary>
 void MenuAnterior()
 {
 	menuAtual = menuAnterior;
 	opcaoAtual = 1;
 }
 
+/// <summary>
+/// Funcao usada para desativar o menu. Apos chamada, voce nao podera mais usar o menu
+/// </summary>
 void detachMenu()
 {
 	Detach = true;
@@ -372,6 +445,10 @@ void detachMenu()
 #pragma endregion
 
 #pragma region CONTROLES
+
+/// <summary>
+/// Void que checka as teclas pressionadas, para navegar/abrir/fechar/selecionar
+/// </summary>
 void Controles()
 {
 	if (showhide == true && menuAtual != 0)
@@ -442,6 +519,12 @@ void Controles()
 #pragma endregion
 
 #pragma region PONTEIROS DE MEMORIA
+/// <summary>
+/// Funcao usada para pegar o endereço de um jogo, para poder usar jogo.exe + ponteiro, como no Cheat Engine
+/// </summary>
+/// <param name="ID do processo"></param>
+/// <param name="Nome"></param>
+/// <returns></returns>
 uintptr_t GetModuleBaseAddress(DWORD procId, const TCHAR* modName)
 {
 	uintptr_t modBaseAddr = 0;
@@ -465,6 +548,13 @@ uintptr_t GetModuleBaseAddress(DWORD procId, const TCHAR* modName)
 	CloseHandle(hSnap);
 	return modBaseAddr;
 }
+
+/// <summary>
+/// Funcao usada para percorer 1 ponteiro a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro1(DWORD EnderecoAdicional, DWORD ponteiro1)
 {
 	DWORD pId;
@@ -478,6 +568,14 @@ DWORD Jump_Ponteiro1(DWORD EnderecoAdicional, DWORD ponteiro1)
 	address += ponteiro1;
 	return base;
 }
+
+/// <summary>
+///  Funcao usada para percorer 2 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro2(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2)
 {
 	DWORD pId;
@@ -494,6 +592,14 @@ DWORD Jump_Ponteiro2(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2)
 	address2 += ponteiro2;
 	return address2;
 }
+/// <summary>
+/// Funcao usada para percorer 3 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro3(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3)
 {
 	DWORD pId;
@@ -513,6 +619,15 @@ DWORD Jump_Ponteiro3(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address22 += ponteiro3;
 	return address22;
 }
+/// <summary>
+/// Funcao usada para percorer 4 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro4(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4)
 {
 	DWORD pId;
@@ -535,6 +650,16 @@ DWORD Jump_Ponteiro4(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address222 += ponteiro4;
 	return address222;
 }
+/// <summary>
+/// Funcao usada para percorer 5 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <param name="ponteiro5"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro5(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4, DWORD ponteiro5)
 {
 	DWORD pId;
@@ -560,6 +685,17 @@ DWORD Jump_Ponteiro5(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address2222 += ponteiro5;
 	return address2222;
 }
+/// <summary>
+/// Funcao usada para percorer 6 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <param name="ponteiro5"></param>
+/// <param name="ponteiro6"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro6(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4, DWORD ponteiro5, DWORD ponteiro6)
 {
 	DWORD pId;
@@ -588,6 +724,18 @@ DWORD Jump_Ponteiro6(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address22222 >= ponteiro6;
 	return address22222;
 }
+/// <summary>
+/// Funcao usada para percorer 7 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <param name="ponteiro5"></param>
+/// <param name="ponteiro6"></param>
+/// <param name="ponteiro7"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro7(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4, DWORD ponteiro5, DWORD ponteiro6, DWORD ponteiro7)
 {
 	DWORD pId;
@@ -619,6 +767,19 @@ DWORD Jump_Ponteiro7(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address222222 += ponteiro7;
 	return address222222;
 }
+/// <summary>
+/// Funcao usada para percorer 8 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <param name="ponteiro5"></param>
+/// <param name="ponteiro6"></param>
+/// <param name="ponteiro7"></param>
+/// <param name="ponteiro8"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro8(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4, DWORD ponteiro5, DWORD ponteiro6, DWORD ponteiro7, DWORD ponteiro8)
 {
 	DWORD pId;
@@ -653,6 +814,20 @@ DWORD Jump_Ponteiro8(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address2222222 += ponteiro8;
 	return address2222222;
 }
+/// <summary>
+/// Funcao usada para percorer 9 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <param name="ponteiro5"></param>
+/// <param name="ponteiro6"></param>
+/// <param name="ponteiro7"></param>
+/// <param name="ponteiro8"></param>
+/// <param name="ponteiro9"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro9(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4, DWORD ponteiro5, DWORD ponteiro6, DWORD ponteiro7, DWORD ponteiro8, DWORD ponteiro9)
 {
 	DWORD pId;
@@ -690,6 +865,21 @@ DWORD Jump_Ponteiro9(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, 
 	address22222222 += ponteiro9;
 	return address22222222;
 }
+/// <summary>
+/// Funcao usada para percorer 10 ponteiros a partir de um offset e retornar o valor final
+/// </summary>
+/// <param name="EnderecoAdicional"></param>
+/// <param name="ponteiro1"></param>
+/// <param name="ponteiro2"></param>
+/// <param name="ponteiro3"></param>
+/// <param name="ponteiro4"></param>
+/// <param name="ponteiro5"></param>
+/// <param name="ponteiro6"></param>
+/// <param name="ponteiro7"></param>
+/// <param name="ponteiro8"></param>
+/// <param name="ponteiro9"></param>
+/// <param name="ponteiro10"></param>
+/// <returns></returns>
 DWORD Jump_Ponteiro10(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2, DWORD ponteiro3, DWORD ponteiro4, DWORD ponteiro5, DWORD ponteiro6, DWORD ponteiro7, DWORD ponteiro8, DWORD ponteiro9, DWORD ponteiro10)
 {
 	DWORD pId;
@@ -731,6 +921,12 @@ DWORD Jump_Ponteiro10(DWORD EnderecoAdicional, DWORD ponteiro1, DWORD ponteiro2,
 	return address222222222;
 }
 
+/// <summary>
+/// Funcao usada para sobrescrever endereços de memoria, a partir de um offset 
+/// </summary>
+/// <param name="Offset"></param>
+/// <param name="valor"></param>
+/// <returns></returns>
 bool SobrescreverMemoria(DWORD Offset, int valor)
 {
 	DWORD pId;
@@ -748,7 +944,9 @@ bool SobrescreverMemoria(DWORD Offset, int valor)
 
 
 
-
+/// <summary>
+/// Void do menu principal, contendo as opcoes do principal
+/// </summary>
 void MenuPrincipal()
 {
 	DefinirMenuAnterior(Fechado);
@@ -767,6 +965,9 @@ void MenuPrincipal()
 	AddCredits("Created by BresoDEV"); 
 }
 
+/// <summary>
+/// Menu de cores. Aconselho deixar esse menu sempre, para o usuario poder personalizar o menu do jeito que quiser
+/// </summary>
 void MenuDeCores()
 {
 	DefinirMenuAnterior(Principal);
@@ -786,7 +987,10 @@ void MenuDeCores()
 	AddCredits("Created by BresoDEV");
 }
 
-
+/// <summary>
+/// Funcao que le o ID do menu atual e chama a void correspondente ao menu
+/// </summary>
+/// <param name="ENUM ou ID do menu"></param>
 void Menus(int enume)
 {
 	switch (enume)
@@ -797,6 +1001,12 @@ void Menus(int enume)
 
 }
 
+
+/// <summary>
+/// Funcao que executa ai clicar na opcao, fique atento aos exemplos de como construir seu mod corretamente
+/// </summary>
+/// <param name="menu"></param>
+/// <param name="opcao"></param>
 void AplicarOpcao(int menu, int opcao)
 {
 	HWND hWnd = FindWindow(0, Jogo);
@@ -869,6 +1079,17 @@ void AplicarOpcao(int menu, int opcao)
 
 
 #pragma region OUTRAS FUNCOES
+
+/// <summary>
+/// Cria um quadrado na tela. Pode ser usado para exibir fora do layout do menu
+/// </summary>
+/// <param name="posx"></param>
+/// <param name="posy"></param>
+/// <param name="tamx"></param>
+/// <param name="tamy"></param>
+/// <param name="r"></param>
+/// <param name="g"></param>
+/// <param name="b"></param>
 void DRAW_RECT(int posx, int posy, int tamx, int tamy, int r, int g, int b)//LOOP
 {
 	//ShowWindow(FindWindowA("ConsoleWindowClass", NULL), false);
@@ -879,6 +1100,14 @@ void DRAW_RECT(int posx, int posy, int tamx, int tamy, int r, int g, int b)//LOO
 	Sleep(1);
 }
 
+/// <summary>
+/// Exibe um texto na tela. Pode ser usado para exibir fora do layout do menu
+/// </summary>
+/// <param name="posx"></param>
+/// <param name="posy"></param>
+/// <param name="textor"></param>
+/// <param name="textog"></param>
+/// <param name="textob"></param>
 void DRAW_TEXT(int posx, int posy, int textor, int textog, int textob)
 {
 	HDC hdc = GetDC(0);
@@ -891,6 +1120,10 @@ void DRAW_TEXT(int posx, int posy, int textor, int textog, int textob)
 	DrawText(hdc, L"My text", -1, &rect, DT_LEFT);
 }
 
+/// <summary>
+/// Checka se o menu esta aberto. TRUE para aberto e FALSE para fechado
+/// </summary>
+/// <returns></returns>
 bool MenuAberto()
 {
 	if (showhide == true && menuAtual != 0)
@@ -903,20 +1136,25 @@ bool MenuAberto()
 
 
 
-
+/// <summary>
+/// Void usada para funcoes que precisam ser executadas continuamente. Note que tem 3 variavoes
+/// </summary>
+/// <param name="Constante: Executa sempre, independente do menu estar aberto ou nao"></param>
+/// <param name="Menu aberto: So executa em loop caso o menu esteja aberto."></param>
+/// <param name="Menu fechado: So executa caso o menu esteja fechado"></param>
 void Loop()
 {
 
 	if (MenuAberto())
 	{
-		//loop so quando ta aberto	 
+		//So executa em loop caso o menu esteja aberto	 
 	}
 	else
 	{
-		//loop so quando esta fechado
+		//So executa caso o menu esteja fechado
 	}
 
-	//loop sempre, mesmo fechado
+	//Executa sempre, independente do menu estar aberto ou nao
 }
 
 int main()
