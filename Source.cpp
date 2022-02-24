@@ -9,10 +9,36 @@
 #include <tchar.h>  
 #include "enums.h"
 
+
 using namespace std;
 
 void Menus(int enume);
 void AplicarOpcao(int menu, int opcao);
+void DRAW_RECT(int posx, int posy, int tamx, int tamy, int r, int g, int b);
+void DRAW_TEXT(int posx, int posy, int textor, int textog, int textob);
+int main();
+
+enum Menus
+{
+	Fechado,
+	Principal,
+	Cores,
+};
+
+enum Cores
+{
+	Preto,
+	AzulMarinho,
+	VerdeEscuro,
+	Aqua,
+	Vermelho,
+	Violeta,
+	Cinza,
+	CinzaEscuro,
+	AzulEscuro,
+	VerdeLima,
+	Cyano,
+};
 
 #pragma region GAME CONFIG
 LPCWSTR Jogo = TEXT("Minecraft 1.8.9");
@@ -25,10 +51,10 @@ int y = 50;
 int transparencia = 230;
 bool showhide = true;
 int posX = 70;
-int posY = 100;
+int posY = 150;
 int width = 300;
 int height = 450;
-int velocidade = 150;
+int velocidade = 1;
 int menuAtual = 1;
 int menuAnterior = 1;
 int opcaoAtual = 1;
@@ -41,7 +67,40 @@ std::string espacamentoMenu = "   ";
 
 #pragma endregion
 
+#pragma region EXEMPLOS
+//AddInt
+int intss = 1;
+
+//AddFloat
+float flouut = 1.0;
+
+//AddBool
+bool Booul = false;
+
+//AddArray
+int ArrayIndex = 0;
+std::string Arrays[11] = { "Paulo", "Ana", "Carlos", "Eduardo", "Pedro", "Maria", "Joao", "Alborguetti", "Pedro de Lara", "Anibal", "Chris" };
+
+#pragma endregion
+
 #pragma region CONSOLE DESIGN
+
+void tamanhoFonte(int tamanho)
+{
+
+	PCONSOLE_FONT_INFOEX lpConsoleCurrentFontEx = new CONSOLE_FONT_INFOEX;
+
+	lpConsoleCurrentFontEx->cbSize = sizeof(CONSOLE_FONT_INFOEX);
+	lpConsoleCurrentFontEx->dwFontSize.X = tamanho;
+	lpConsoleCurrentFontEx->dwFontSize.Y = tamanho;
+
+	//GetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), NULL, lpConsoleCurrentFontEx); //retrive all console font informations
+
+	swprintf_s(lpConsoleCurrentFontEx->FaceName, L"Lucida Console");
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), NULL, lpConsoleCurrentFontEx);
+
+	//SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+}
 void SetMenuColor(int color)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -91,7 +150,7 @@ void MenuSetWindow(int posX, int posY, int width, int height, bool Transparent)
 	GetClientRect(hWnd, &rcClient);
 	SetWindowRgn(hWnd, CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom), TRUE);
 }
-void MenuLoadSetWindow()
+void UpdateMenuLayout()
 {
 
 
@@ -114,7 +173,8 @@ void MenuLoadSetWindow()
 	SetConsoleTextAttribute(console_window, 100);
 	MenuSetWindow(posX, posY, width, height, 0);
 	SetTopMost(hWnd);
-	Menus(1);
+	tamanhoFonte(15);
+	//Menus(1);
 }
 void MenuShowHide()
 {
@@ -137,16 +197,17 @@ void MenuShowHide()
 
 	}
 }
+
 #pragma endregion
 
 #pragma region ADDOPTIONS 
 void AddOption(std::string Texto, int opcao = 10000)
-{  
+{
 	if (opcao == opcaoAtual)
 	{
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(hConsole, corScroller);
-		std::cout << espacamentoMenu << Texto <<std::endl;
+		std::cout << espacamentoMenu << Texto << std::endl;
 	}
 	else
 	{
@@ -156,12 +217,31 @@ void AddOption(std::string Texto, int opcao = 10000)
 	}
 }
 
-void AddTitle(std::string Texto, int maxOpcoesMenuAtual)
+void AddCredits(std::string Texto)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 12);
+	std::cout << espacamentoMenu << Texto << std::endl;
+
+}
+
+ 
+
+void AddTitle(std::string Texto , std::string SubTexto, int maxOpcoesMenuAtual)
+{
+	//Title
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, corBanner);
-	std::cout << espacamentoMenu << Texto << "   " << opcaoAtual << "/" << maxOpcoes << std::endl;
+	//tamanhoFonte(intss);
+	std::cout << espacamentoMenu << Texto << "    " << std::endl;
+
+	//Subtitle 
+	SetConsoleTextAttribute(hConsole, 12);
+	//tamanhoFonte(18);
+	std::cout << espacamentoMenu << SubTexto << "   " << opcaoAtual << "/" << maxOpcoes << "    " << std::endl;
+
 	maxOpcoes = maxOpcoesMenuAtual;
+	tamanhoFonte(15);
 }
 
 
@@ -172,9 +252,9 @@ void AddBool(std::string Texto, bool boleta, int opcao)
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(hConsole, corScroller);
 		if (boleta)
-			std::cout << espacamentoMenu  << Texto << ": Ativado" << std::endl;
+			std::cout << espacamentoMenu << Texto << ": Ativado" << std::endl;
 		else
-			std::cout << espacamentoMenu  << Texto << ": Desativado" << std::endl;
+			std::cout << espacamentoMenu << Texto << ": Desativado" << std::endl;
 	}
 	else
 	{
@@ -195,7 +275,7 @@ void AddInt(std::string Texto, int inteiro, int opcao)
 	{
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(hConsole, corScroller);
-		std::cout << espacamentoMenu  << Texto << " < " << inteiro << " >" << std::endl;
+		std::cout << espacamentoMenu << Texto << " < " << inteiro << " >" << std::endl;
 	}
 	else
 	{
@@ -216,7 +296,7 @@ void AddFloat(std::string Texto, float flutuante, int opcao)
 	{
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(hConsole, corScroller);
-		std::cout << espacamentoMenu  << Texto << " < " << flutuante << " >" << std::endl;
+		std::cout << espacamentoMenu << Texto << " < " << flutuante << " >" << std::endl;
 	}
 	else
 	{
@@ -245,16 +325,27 @@ void AddArray(std::string Texto, int ponteiro, std::string arrays[], int opcao)
 }
 
 
-void AddBreak(std::string Texto = "")
+void AddBreak(std::string Texto = "", int linhas = 1)
 {
+	int linha = 1;
+	while (linha <= linhas)
+	{
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, corScroller2);
+		std::cout << "" << std::endl;
+		linha++;
+	}
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hConsole, corScroller2);
+	SetConsoleTextAttribute(hConsole, 12);
 	std::cout << espacamentoMenu << Texto << std::endl;
 }
+
+
 
 void DefinirMenuAnterior(int menu)
 {
 	menuAnterior = menu;
+	//opcaoAtual = 1;
 }
 
 void ProxMenu(int menu)
@@ -266,7 +357,10 @@ void ProxMenu(int menu)
 void MenuAnterior()
 {
 	menuAtual = menuAnterior;
+	opcaoAtual = 1;
 }
+
+ 
 
 #pragma endregion
 
@@ -334,21 +428,7 @@ void Controles()
 				showhide = false;
 				SetBOTTOM(hConsole);
 			}
-		}
-		if (GetAsyncKeyState(VK_RIGHT))
-		{
-			AplicarOpcao(menuAtual, opcaoAtual);
-			system("cls");
-			Menus(menuAtual);
-			Sleep(velocidade);
-		}
-		if (GetAsyncKeyState(VK_LEFT))
-		{
-			AplicarOpcao(menuAtual, opcaoAtual);
-			system("cls");
-			Menus(menuAtual);
-			Sleep(velocidade);
-		}
+		} 
 	}
 
 }
@@ -658,21 +738,7 @@ bool SobrescreverMemoria(DWORD Offset, int valor)
 
 #pragma endregion
 
-#pragma region EXEMPLOS
-//AddInt
-int intss = 1;
 
-//AddFloat
-float flouut = 1.0;
-
-//AddBool
-bool Booul = false;
-
-//AddArray
-int ArrayIndex = 0;
-std::string Arrays[11] = { "Paulo", "Ana", "Carlos", "Eduardo", "Pedro", "Maria", "Joao", "Alborguetti", "Pedro de Lara", "Anibal", "Chris"};
-
-#pragma endregion
 
 
 
@@ -680,65 +746,49 @@ void MenuPrincipal()
 {
 	DefinirMenuAnterior(Fechado);
 	AddBreak();
-	AddTitle("BresoDEV GUI Menu", 9);
+	AddTitle("BresoDEV GUI Menu", "Menu Principal", 6);
 	AddBreak();
-	AddOption("Max Dinheiro", 1);
-	AddOption("Submenu 2", 2);
-	AddInt("Int ", intss, 3);
-	AddFloat("Float", flouut, 4);
-	AddBool("Bool", Booul, 5);
-	AddArray("Array", ArrayIndex, Arrays, 6);
+	AddOption("Opcoes de Cores", 1);
+	AddBreak("Exemplos:", 0);
+	AddInt("Int ", intss, 2);
+	AddFloat("Float", flouut, 3);
+	AddBool("Bool", Booul, 4);
+	AddArray("Array", ArrayIndex, Arrays, 5);
 	AddBreak();
-	AddBreak("-----------------");
-	AddInt("Cor do Topo", corBanner, 7);
-	AddInt("Cor do Scrool", corScroller, 8);
-	AddInt("Cor do Scrool 2", corScroller2, 9);
-	AddBreak();
-	AddBreak();
-	AddOption("Created by BresoDEV");
+	AddOption("Desativar Menu", 6);
+	AddBreak("---------", 5);
+	AddCredits("Created by BresoDEV"); 
 }
 
-void sub2()
+void MenuDeCores()
 {
 	DefinirMenuAnterior(Principal);
 	AddBreak();
-	AddTitle("Submenu 2", 3);
+	AddTitle("BresoDEV GUI Menu", "Cores e Posicoes", 8);
 	AddBreak();
-	AddOption("Submenu 3", 1);
-	AddOption("Vazio", 2);
-	AddOption("Vazio", 3);
+	AddInt("Cor do Topo", corBanner, 1);
+	AddInt("Cor do Scrool", corScroller, 2);
+	AddInt("Cor do Scrool 2", corScroller2, 3);
+	AddInt("Transparencia", transparencia, 4);
+	AddInt("PosX", posX, 5);
+	AddInt("PosY", posY, 6);
+	AddInt("Width", width, 7);
+	AddInt("Height", height, 8);
 	AddBreak();
 	AddBreak("-----------------");
-	AddOption("Created by BresoDEV");
+	AddCredits("Created by BresoDEV");
 }
 
-void sub3()
-{
-	DefinirMenuAnterior(Submenu2);
-	AddBreak();
-	AddTitle("Sub 3", 3);
-	AddBreak();
-	AddOption("Vazio", 1);
-	AddOption("Vazio", 2);
-	AddOption("Vazio", 3);
-	AddBreak();
-	AddBreak("-----------------");
-	AddOption("Created by BresoDEV");
-}
 
 void Menus(int enume)
 {
 	switch (enume)
 	{
-	case Principal: MenuPrincipal();	break;
-	case Submenu2:	sub2();				break;
-	case Submenu3:	sub3();				break;
+	case Principal:		MenuPrincipal();			break;
+	case Cores:			MenuDeCores();				break;
 	}
 
 }
-
-
-
 
 void AplicarOpcao(int menu, int opcao)
 {
@@ -752,77 +802,58 @@ void AplicarOpcao(int menu, int opcao)
 	{
 		switch (opcaoAtual)
 		{
-		case 1:  break;
-		case 2: ProxMenu(Submenu2); break;
-		case 3://int option
+		case 1:
+			ProxMenu(Cores);
+			break;
+		case 2://int option
 			if (intss == 100)
 				intss = 0;
 			else
 				intss++;
 			break;
-		case 4://float option
+		case 3://float option
 			if (flouut == 10.0)
 				flouut = 1.0;
 			else
 				flouut += 1.0;
 			break;
-		case 5: //bool option
+		case 4: //bool option
 			Booul = !Booul;
 			break;
-		case 6: //array option
+		case 5: //array option
 			if (ArrayIndex == 10)
 				ArrayIndex = 0;
 			else
 				ArrayIndex++;
 			break;
 
-		case 7: //array option
-			if (corBanner == 1000)
-				corBanner = 0;
-			else
-				corBanner++;
-			break;
-
-		case 8: //array option
-			if (corScroller == 1000)
-				corScroller = 0;
-			else
-				corScroller++;
-			break;
-
-		case 9: //array option
-			if (corScroller2 == 10)
-				corScroller2 = 0;
-			else
-				corScroller2++;
+		case 6: 
+			system("exit");
 			break;
 		}
 	}
 	break;
-	case Submenu2:
+	case Cores:
 	{
 		switch (opcaoAtual)
 		{
 
-		case 1: ProxMenu(Submenu3); break;
-		case 2:  break;
-		case 3:  break;
+		case 1:		if (corBanner <= 100) corBanner++; else corBanner = 0;					break;
+		case 2:		if (corScroller <= 100) corScroller++; else corScroller = 0;			break;
+		case 3:		if (corScroller2 <= 100) corScroller2++; else corScroller2 = 0;			break;
+		case 4:		if (transparencia <= 255) transparencia++; else transparencia = 100; 	break;
+		case 5:		if (posX <= 1000) posX++; else posX = 100;								break;
+		case 6:		if (posY <= 1000) posY++; else posY = 100;								break;
+		case 7:		if (width <= 1000) width++; else width = 100;							break;
+		case 8:		if (height <= 1000) height++; else height = 100;							break;
 		}
+
 	}
 	break;
-	case Submenu3:
-	{
-		switch (opcaoAtual)
-		{
 
-		case 1:  break;
-		case 2:  break;
-		case 3:  break;
-		}
-	}
-	break;
 	}
 
+	UpdateMenuLayout();
 	CloseHandle(hProc);
 	system("cls");
 	Menus(menuAtual);
@@ -830,14 +861,70 @@ void AplicarOpcao(int menu, int opcao)
 }
 
 
+#pragma region OUTRAS FUNCOES
+void DRAW_RECT(int posx, int posy, int tamx, int tamy, int r, int g, int b)//LOOP
+{
+	//ShowWindow(FindWindowA("ConsoleWindowClass", NULL), false);
+	HDC hDC_Desktop = GetDC(0);
+	RECT rect = { posx, posy, tamx, tamy };
+	HBRUSH blueBrush = CreateSolidBrush(RGB(r, g, b));
+	FillRect(hDC_Desktop, &rect, blueBrush);
+	Sleep(1);
+}
+
+void DRAW_TEXT(int posx, int posy, int textor, int textog, int textob)
+{
+	HDC hdc = GetDC(0);
+	RECT rect = { posx, posy, 1800, 1600 };
+	SetTextColor(hdc, RGB(textor, textog, textob));
+
+	SetBkMode(hdc, TRANSPARENT);
+	SetBkColor(hdc, RGB(0, 0, 0));
+
+	DrawText(hdc, L"My text", -1, &rect, DT_LEFT);
+}
+
+bool MenuAberto()
+{
+	if (showhide == true && menuAtual != 0)
+		return true;
+	else
+		return false;
+}
+
+#pragma endregion
+
+
+
+
+void Loop()
+{
+
+	if (MenuAberto())
+	{
+		//loop so quando ta aberto	 
+	}
+	else
+	{
+		//loop so quando esta fechado
+	}
+
+	//loop sempre, mesmo fechado
+}
 
 int main()
 {
-	MenuLoadSetWindow();
+
+	UpdateMenuLayout();
+	tamanhoFonte(15);
+	Menus(1);
 	while (true)
 	{
+		Loop();
 		Controles();
 		MenuShowHide();
 	}
 
+
 }
+
