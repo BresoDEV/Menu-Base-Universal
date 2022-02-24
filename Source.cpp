@@ -52,25 +52,25 @@ LPCWSTR Jogo_exe = TEXT("javaw.exe");		//Nome do executavel do jogo .exe
 #pragma endregion
 
 #pragma region LAYOUT
-int x = 50;									//
-int y = 50;									//
-int transparencia = 230;					//
-bool showhide = true;						//
-int posX = 70;								//
-int posY = 150;								//
-int width = 300;							//
-int height = 450;							//
-int velocidade = 100;						//
-int menuAtual = 1;							//
-int menuAnterior = 1;						//
-int opcaoAtual = 1;							//
-int ponteiroOpcao;							//
-int maxOpcoes = 10;							//
-int corBanner = 30;							//
-int corScroller = 30;						//
-int corScroller2 = CinzaEscuro;				//
-bool Detach = false;						//
-std::string espacamentoMenu = "   ";		//
+int x = 50;									//Posicao X inicial do menu
+int y = 50;									//Posicao Y inicial do menu
+int transparencia = 230;					//Transparencia do menu. Valor max = 255
+bool showhide = true;						//Bool usada para exibir/ocultar o menu
+int posX = 70;								//Posicao X inicial do menu
+int posY = 150;								//Posicao Y inicial do menu
+int width = 300;							//Largura do mod
+int height = 450;							//Altura do mod
+int velocidade = 100;						//Velocidade da navegacao. Valor Min = 1,
+int menuAtual = 1;							//Index usada para setar o menu que esta sendo exibido atualmente
+int menuAnterior = 1;						//Index identificando o menu anterior
+int opcaoAtual = 1;							//Index da opcao atual ao mudar de menu
+int ponteiroOpcao;							//Index da opcao na navegaçao do menu
+int maxOpcoes = 10;							//Numero max de opcoes do menu atual
+int corBanner = 30;							//Cor do Banner. Consulte o enumedor de cores para ver outras opcoes
+int corScroller = 30;						//Cor do scroller de opcoes . Consulte o enumedor de cores para ver outras opcoes
+int corScroller2 = CinzaEscuro;				//Cor de fundo das opcoes. Consulte o enumedor de cores para ver outras opcoes
+bool Detach = false;						//Bool usada para desativar o menu permanentemente
+std::string espacamentoMenu = "   ";		//Espacamento da direita das opcoes. pode ser alterado caso quiser
 
 #pragma endregion
 
