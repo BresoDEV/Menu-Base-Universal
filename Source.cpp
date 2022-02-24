@@ -54,7 +54,7 @@ int posX = 70;
 int posY = 150;
 int width = 300;
 int height = 450;
-int velocidade = 1;
+int velocidade = 100;
 int menuAtual = 1;
 int menuAnterior = 1;
 int opcaoAtual = 1;
@@ -63,7 +63,7 @@ int maxOpcoes = 10;
 int corBanner = 30;
 int corScroller = 30;
 int corScroller2 = CinzaEscuro;
-bool Detach = true;
+bool Detach = false;
 std::string espacamentoMenu = "   ";
 
 #pragma endregion
@@ -361,7 +361,13 @@ void MenuAnterior()
 	opcaoAtual = 1;
 }
 
- 
+void detachMenu()
+{
+	Detach = true;
+	main();
+	system("exit");
+	
+ }
 
 #pragma endregion
 
@@ -829,9 +835,7 @@ void AplicarOpcao(int menu, int opcao)
 			break;
 
 		case 6: 
-			Detach = false;
-			main();
-			system("EXIT");
+			detachMenu();
 			break;
 		}
 	}
@@ -918,14 +922,17 @@ void Loop()
 int main()
 {
 
-	UpdateMenuLayout();
-	tamanhoFonte(15);
-	Menus(1);
-	while (Detach)
+	if (!Detach)
 	{
-		Loop();
-		Controles();
-		MenuShowHide();
+		UpdateMenuLayout();
+		tamanhoFonte(15);
+		Menus(1);
+		while (!Detach)
+		{
+			Loop();
+			Controles();
+			MenuShowHide();
+		}
 	}
 
 
