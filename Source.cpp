@@ -1190,10 +1190,24 @@ void Loop()
 	//Executa sempre, independente do menu estar aberto ou nao
 }
 
+
+
+bool Check_JogoAberto()
+{
+	HWND hWnd = FindWindow(0, Jogo);
+	DWORD pId;
+	GetWindowThreadProcessId(hWnd, &pId);
+	HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, pId);
+	DWORD ret = WaitForSingleObject(process, 0);
+	CloseHandle(process);
+	return ret == WAIT_TIMEOUT;
+}
+
 int main()
 {
-
-	if (!Detach)
+	if(Check_JogoAberto())
+	{
+		if (!Detach)
 	{
 		UpdateMenuLayout();
 		tamanhoFonte(15);
@@ -1204,6 +1218,7 @@ int main()
 			Controles();
 			MenuShowHide();
 		}
+	}
 	}
 
 
