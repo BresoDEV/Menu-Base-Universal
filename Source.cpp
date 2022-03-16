@@ -7,8 +7,7 @@
 #include <TlHelp32.h>
 #include <stdio.h> 
 #include <tchar.h>  
-#include "enums.h"
-
+ 
 
 using namespace std;
 
@@ -47,8 +46,8 @@ enum Cores
 };
 
 #pragma region GAME CONFIG
-LPCWSTR Jogo = TEXT("Minecraft 1.8.9");		//Nome da janela do jogo
-LPCWSTR Jogo_exe = TEXT("javaw.exe");		//Nome do executavel do jogo .exe
+LPCWSTR Jogo = TEXT("www.SuperMarioBrosX.org");		//Nome da janela do jogo
+LPCWSTR Jogo_exe = TEXT("smbx.exe");		//Nome do executavel do jogo .exe
 #pragma endregion
 
 #pragma region LAYOUT
@@ -939,39 +938,6 @@ bool SobrescreverMemoria(DWORD Offset, int valor)
 
 
 
-bool SobrescreverMemoriaFloat(DWORD Offset, float valor)
-{
-	DWORD pId;
-	//HWND hWnd = FindWindow(0, TEXT("Minecraft 1.8.9"));
-	HWND hWnd = FindWindow(0, Jogo);
-	GetWindowThreadProcessId(hWnd, &pId);
-	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pId);
-	return WriteProcessMemory(hProc, (void*)Offset, &valor, sizeof(valor), nullptr); //write
-}
-
-bool EscreverMemoria_enderecoFixo(DWORD Offset, int valor)
-{
-	HWND hWnd = FindWindow(0, Jogo);
-	DWORD pId;
-	GetWindowThreadProcessId(hWnd, &pId);
-	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pId);
-	DWORD ac_client = GetModuleBaseAddress(pId, Jogo_exe);
-	DWORD base = ac_client + Offset; 
-	return WriteProcessMemory(hProc, (void*)base, &valor, sizeof(valor), nullptr);
-}
-
-bool EscreverMemoria_enderecoFixoFloat(DWORD Offset, float valor)
-{
-	HWND hWnd = FindWindow(0, Jogo);
-	DWORD pId;
-	GetWindowThreadProcessId(hWnd, &pId);
-	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pId);
-	DWORD ac_client = GetModuleBaseAddress(pId, Jogo_exe);
-	DWORD base = ac_client + Offset;
-	float aa = valor;
-	return WriteProcessMemory(hProc, (void*)base, &aa, sizeof(aa), nullptr);
-}
-
 #pragma endregion
 
 
@@ -986,7 +952,7 @@ void MenuPrincipal()
 	AddBreak();
 	AddTitle("BresoDEV GUI Menu", "Menu Principal", 6);
 	AddBreak();
-	AddOption("Opcoes de Cores", 1);
+	AddOption("Max Lifes", 1);
 	AddBreak("Exemplos:", 0);
 	AddInt("Int ", intss, 2);
 	AddFloat("Float", flouut, 3);
@@ -1053,7 +1019,7 @@ void AplicarOpcao(int menu, int opcao)
 		switch (opcaoAtual)
 		{
 		case 1:
-			ProxMenu(Cores);
+			SobrescreverMemoria(0x72C5AC, 99);
 			break;
 		case 2://int option
 			if (intss == 100)
@@ -1190,24 +1156,10 @@ void Loop()
 	//Executa sempre, independente do menu estar aberto ou nao
 }
 
-
-
-bool Check_JogoAberto()
-{
-	HWND hWnd = FindWindow(0, Jogo);
-	DWORD pId;
-	GetWindowThreadProcessId(hWnd, &pId);
-	HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, pId);
-	DWORD ret = WaitForSingleObject(process, 0);
-	CloseHandle(process);
-	return ret == WAIT_TIMEOUT;
-}
-
 int main()
 {
-	if(Check_JogoAberto())
-	{
-		if (!Detach)
+
+	if (!Detach)
 	{
 		UpdateMenuLayout();
 		tamanhoFonte(15);
@@ -1218,7 +1170,6 @@ int main()
 			Controles();
 			MenuShowHide();
 		}
-	}
 	}
 
 
