@@ -46,8 +46,8 @@ enum Cores
 };
 
 #pragma region GAME CONFIG
-LPCWSTR Jogo = TEXT("www.SuperMarioBrosX.org");		//Nome da janela do jogo
-LPCWSTR Jogo_exe = TEXT("smbx.exe");		//Nome do executavel do jogo .exe
+LPCWSTR Jogo = TEXT("blablabla");		//Nome da janela do jogo
+LPCWSTR Jogo_exe = TEXT("blabla.exe");		//Nome do executavel do jogo .exe
 #pragma endregion
 
 #pragma region LAYOUT
