@@ -126,11 +126,7 @@ void SetMenuColor(int color)
 void SetTopMost(HWND hWnd)
 {
 	RECT rect;
-
 	GetWindowRect(hWnd, &rect);
-
-
-
 	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, posX, posY, width, height, SWP_SHOWWINDOW);
 }
 
@@ -140,11 +136,7 @@ void SetTopMost(HWND hWnd)
 void SetBOTTOM(HWND hWnd)
 {
 	RECT rect;
-
 	GetWindowRect(hWnd, &rect);
-
-
-
 	SetWindowPos(GetConsoleWindow(), HWND_TOPMOST, posX, posY, width, height, SWP_HIDEWINDOW);
 }
 
@@ -154,21 +146,16 @@ void SetBOTTOM(HWND hWnd)
 void MenuSetWindow(int posX, int posY, int width, int height, bool Transparent)
 {
 	HWND console_window = GetConsoleWindow();
-
 	if (Transparent == true)
 	{
 		SetWindowLong(console_window, GWL_EXSTYLE,
-			GetWindowLong(console_window, GWL_EXSTYLE) & !WS_EX_TRANSPARENT & !WS_EX_RIGHTSCROLLBAR);
+		GetWindowLong(console_window, GWL_EXSTYLE) & !WS_EX_TRANSPARENT & !WS_EX_RIGHTSCROLLBAR);
 	}
-
 	SetLayeredWindowAttributes(console_window, 0, transparencia, LWA_ALPHA);
-
 	SetWindowPos(console_window, 0, posX, posY, width, height, SWP_NOZORDER);
-
 	HWND hWnd = GetConsoleWindow();
 	RECT rcScr, rcWnd, rcClient;
 	RECT aaa;
-
 	GetWindowRect(hWnd, &rcWnd);
 	GetWindowRect(hWnd, &aaa);
 	GetWindowRect(GetDesktopWindow(), &rcScr);
@@ -206,7 +193,6 @@ void MenuShowHide()
 {
 	if (GetAsyncKeyState(VK_DELETE))
 	{
-
 		HWND hConsole = GetConsoleWindow();
 		if (showhide == false)
 		{
@@ -220,7 +206,6 @@ void MenuShowHide()
 			SetBOTTOM(hConsole);
 			Sleep(500);
 		}
-
 	}
 }
 
@@ -258,7 +243,6 @@ void AddCredits(std::string Texto)
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 12);
 	std::cout << espacamentoMenu << Texto << std::endl;
-
 }
 
  
@@ -275,12 +259,10 @@ void AddTitle(std::string Texto , std::string SubTexto, int maxOpcoesMenuAtual)
 	SetConsoleTextAttribute(hConsole, corBanner);
 	//tamanhoFonte(intss);
 	std::cout << espacamentoMenu << Texto << "    " << std::endl;
-
 	//Subtitle 
 	SetConsoleTextAttribute(hConsole, 12);
 	//tamanhoFonte(18);
 	std::cout << espacamentoMenu << SubTexto << "   " << opcaoAtual << "/" << maxOpcoes << "    " << std::endl;
-
 	maxOpcoes = maxOpcoesMenuAtual;
 	tamanhoFonte(15);
 }
@@ -334,7 +316,6 @@ void AddInt(std::string Texto, int inteiro, int opcao)
 		SetConsoleTextAttribute(hConsole, corScroller2);
 		std::cout << espacamentoMenu << Texto << " < " << inteiro << " >" << std::endl;
 	}
-
 }
 
 
@@ -383,7 +364,6 @@ void AddArray(std::string Texto, int ponteiro, std::string arrays[], int opcao)
 		SetConsoleTextAttribute(hConsole, corScroller2);
 		std::cout << espacamentoMenu << Texto << " < " << arrays[ponteiro] << " >" << std::endl;
 	}
-
 }
 
 /// <summary>
@@ -445,7 +425,6 @@ void detachMenu()
 	Detach = true;
 	main();
 	system("exit");
-	
  }
 
 #pragma endregion
@@ -493,8 +472,6 @@ void Controles()
 				Sleep(velocidade);
 			}
 		}
-
-
 		if (GetAsyncKeyState(VK_SPACE))
 		{
 			AplicarOpcao(menuAtual, opcaoAtual);
@@ -506,7 +483,6 @@ void Controles()
 		{
 			if (menuAtual != Principal)
 			{
-
 				system("cls");
 				MenuAnterior();
 				Menus(menuAtual);
@@ -520,7 +496,6 @@ void Controles()
 			}
 		} 
 	}
-
 }
 #pragma endregion
 
@@ -942,9 +917,6 @@ bool SobrescreverMemoria(DWORD Offset, int valor)
 	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pId);
 	return WriteProcessMemory(hProc, (void*)Offset, &valor, sizeof(valor), nullptr); //write
 }
-
-
-
 #pragma endregion
 
 
@@ -1004,7 +976,6 @@ void Menus(int enume)
 	case Principal:		MenuPrincipal();			break;
 	case Cores:			MenuDeCores();				break;
 	}
-
 }
 
 
@@ -1049,7 +1020,6 @@ void AplicarOpcao(int menu, int opcao)
 			else
 				ArrayIndex++;
 			break;
-
 		case 6: 
 			detachMenu();
 			break;
@@ -1060,7 +1030,6 @@ void AplicarOpcao(int menu, int opcao)
 	{
 		switch (opcaoAtual)
 		{
-
 		case 1:		if (corBanner <= 100) corBanner++; else corBanner = 0;					break;
 		case 2:		if (corScroller <= 100) corScroller++; else corScroller = 0;			break;
 		case 3:		if (corScroller2 <= 100) corScroller2++; else corScroller2 = 0;			break;
@@ -1070,12 +1039,9 @@ void AplicarOpcao(int menu, int opcao)
 		case 7:		if (width <= 1000) width++; else width = 100;							break;
 		case 8:		if (height <= 1000) height++; else height = 100;							break;
 		}
-
 	}
 	break;
-
 	}
-
 	UpdateMenuLayout();
 	CloseHandle(hProc);
 	system("cls");
@@ -1119,10 +1085,8 @@ void DRAW_TEXT(int posx, int posy, int textor, int textog, int textob)
 	HDC hdc = GetDC(0);
 	RECT rect = { posx, posy, 1800, 1600 };
 	SetTextColor(hdc, RGB(textor, textog, textob));
-
 	SetBkMode(hdc, TRANSPARENT);
 	SetBkColor(hdc, RGB(0, 0, 0));
-
 	DrawText(hdc, L"My text", -1, &rect, DT_LEFT);
 }
 
@@ -1137,7 +1101,6 @@ bool MenuAberto()
 	else
 		return false;
 }
-
 #pragma endregion
 
 
@@ -1150,7 +1113,6 @@ bool MenuAberto()
 /// <param name="Menu fechado: So executa caso o menu esteja fechado"></param>
 void Loop()
 {
-
 	if (MenuAberto())
 	{
 		//So executa em loop caso o menu esteja aberto	 
@@ -1159,13 +1121,11 @@ void Loop()
 	{
 		//So executa caso o menu esteja fechado
 	}
-
 	//Executa sempre, independente do menu estar aberto ou nao
 }
 
 int main()
 {
-
 	if (!Detach)
 	{
 		UpdateMenuLayout();
@@ -1178,7 +1138,4 @@ int main()
 			MenuShowHide();
 		}
 	}
-
-
 }
-
