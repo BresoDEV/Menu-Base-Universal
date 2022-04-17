@@ -919,7 +919,16 @@ bool SobrescreverMemoria(DWORD Offset, int valor)
 }
 #pragma endregion
 
-
+bool EscreverMemoria_enderecoFixo(DWORD Offset, int valor)
+{
+	HWND hWnd = FindWindow(0, Jogo);
+	DWORD pId;
+	GetWindowThreadProcessId(hWnd, &pId);
+	HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pId);
+	DWORD ac_client = GetModuleBaseAddress(pId, Jogo_exe);
+	DWORD base = ac_client + Offset;
+	return WriteProcessMemory(hProc, (void*)base, &valor, sizeof(valor), nullptr);
+}
 
 
 /// <summary>
